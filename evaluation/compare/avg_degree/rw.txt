@@ -1,0 +1,1 @@
+RW_avgDegree 172.81

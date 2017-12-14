@@ -1,0 +1,70 @@
+无论是实际网络还是对模型网络进行分析，都离不开对网络拓扑统计指标的计算。反映网络结构与动力学特性的统计指标有很多，Costa等的Characterization of Complex Networks: A Survey of measurements一文对此有全面的综述，本文仅介绍一些常用的统计指标在NetworkX中如何计算。
+
+一、度、度分布
+
+NetworkX可以用来统计图中每个节点的度，并生成度分布序列。下边是一段示例代码（这段代码可以在Shell里一行一行的输入，也可以将其保存为一个以py结尾的纯文本文件后直接运行），注意看注释部分：
+
+import networkx as nx
+G = nx.random_graphs.barabasi_albert_graph(1000,3)   #生成一个n=1000，m=3的BA无标度网络
+print G.degree(0)                                   #返回某个节点的度
+print G.degree()                                     #返回所有节点的度
+print nx.degree_histogram(G)    #返回图中所有节点的度分布序列（从1至最大度的出现频次）
+
+对上述结果稍作处理，就可以在Origin等软件里绘制度分布曲线了，当然也可以用matplotlib直接作图，在上述代码后接着输入：
+
+import matplotlib.pyplot as plt                 #导入科学绘图的matplotlib包
+degree =  nx.degree_histogram(G)          #返回图中所有节点的度分布序列
+x = range(len(degree))                             #生成x轴序列，从1到最大度
+y = [z / float(sum(degree)) for z in degree]
+#将频次转换为频率，这用到Python的一个小技巧：列表内涵，Python的确很方便：）
+plt.loglog(x,y,color="blue",linewidth=2)           #在双对数坐标轴上绘制度分布曲线
+plt.show()                                                          #显示图表
+
+二、群聚系数
+
+这个在NetworkX里实现起来很简单，只需要调用方法nx.average_clustering(G) 就可以完成平均群聚系数的计算，而调用nx.clustering(G) 则可以计算各个节点的群聚系数。
+
+三、直径和平均距离
+
+nx.diameter(G)返回图G的直径（最长最短路径的长度），而nx.average_shortest_path_length(G)则返回图G所有节点间平均最短路径长度。
+
+四、匹配性
+
+这个也比较简单，调用 nx.degree_assortativity_coefficient(G) 方法可以计算一个图的度匹配性。
+
+五、中心性
+
+这个我大部分不知道怎么翻译，直接上NX的帮助文档吧，需要计算哪方面的centrality自己从里边找：）
+
+Degree centrality measures.（点度中心性？）
+degree_centrality(G)     Compute the degree centrality for nodes.
+in_degree_centrality(G)     Compute the in-degree centrality for nodes.
+out_degree_centrality(G)     Compute the out-degree centrality for nodes.
+
+Closeness centrality measures.（紧密中心性？）
+closeness_centrality(G[, v, weighted_edges])     Compute closeness centrality for nodes.
+
+Betweenness centrality measures.（介数中心性？）
+betweenness_centrality(G[, normalized, ...])     Compute betweenness centrality for nodes.
+edge_betweenness_centrality(G[, normalized, ...])     Compute betweenness centrality for edges.
+
+Current-flow closeness centrality measures.（流紧密中心性？）
+current_flow_closeness_centrality(G[, ...])     Compute current-flow closeness centrality for nodes.
+Current-Flow Betweenness
+
+Current-flow betweenness centrality measures.（流介数中心性？）
+current_flow_betweenness_centrality(G[, ...])     Compute current-flow betweenness centrality for nodes.
+edge_current_flow_betweenness_centrality(G)     Compute current-flow betweenness centrality for edges.
+
+Eigenvector centrality.（特征向量中心性？）
+eigenvector_centrality(G[, max_iter, tol, ...])     Compute the eigenvector centrality for the graph G.
+eigenvector_centrality_numpy(G)     Compute the eigenvector centrality for the graph G.
+
+Load centrality.（彻底晕菜~~~）
+load_centrality(G[, v, cutoff, normalized, ...])     Compute load centrality for nodes.
+edge_load(G[, nodes, cutoff])     Compute edge load.
+
+
+六、小结
+
+上边介绍的统计指标只是NetworkX能计算的指标中的一小部分内容，除此之外NetworkX还提供了很多（我还没有用到过的）统计指标计算方法，感兴趣的朋友可以去查NetworkX的在线帮助文档：http://networkx.lanl.gov/reference/index.html。对于加权图的统计指标计算，NetworkX似乎没有直接提供方法（也可能是我没找到），估计需要自己动手编制一些程序来完成。

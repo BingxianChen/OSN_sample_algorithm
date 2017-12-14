@@ -1,0 +1,10 @@
+
+1.converge.py
+各算法的收敛性作图
+黑色水平直线为收敛基线
+收敛算法见文献AS.pdf
+
+2.convergev2.py
+实际采样的收敛判断
+收敛算法见文献MHRW.pdf
+
