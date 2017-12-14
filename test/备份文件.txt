@@ -1,0 +1,89 @@
+####################
+def random_walk(G, start_node=None, size=10, size_type='total'):
+
+    size = __size_type_check(G, size, size_type)
+
+    if start_node==None:
+        start_node = weighted_independent_sample(G.degree())
+
+    if size_type=='unique':
+        sample_unique = set([start_node])
+
+    SG = nx.Graph()   # TODO
+
+    sample = [start_node] # TODO
+    while True:
+        neighbors = nx.neighbors(G, sample[-1])
+        u = random.choice(neighbors)
+        sample.append(u)
+        SG.add_edge(sample[-2],sample[-1])  # TODO
+        # collected enough samples?
+        if size_type=='total':
+            if len(sample) >= size:
+                break
+        else:  #i.e., size_type=='unique'
+            sample_unique.add(u)
+            if len(sample_unique) >= size:
+                break
+    return SG
+
+
+####################
+def metropolis_hastings_random_walk(G, start_node=None, size=10, size_type='total'):
+
+
+    size = __size_type_check(G, size, size_type)
+
+    if start_node==None:
+        start_node = random.choice(G.nodes())
+
+    sample = [start_node]
+
+    if size_type=='unique':
+        sample_unique = set([start_node])
+
+    SG = nx.Graph()  # TODO
+    while True:
+        u = sample[-1]
+        neighbors = nx.neighbors(G, u)
+
+        while True:
+            w = random.choice(neighbors)
+            if random.random() < float(G.degree(u))/G.degree(w):
+                sample.append(w)   # move to w accapted
+                SG.add_edge(sample[-2],sample[-1])
+                break
+            else:
+                sample.append(u)   # move to w rejected - resample the current node (as if followed a self-loop)
+
+        # collected enough samples?
+        if size_type=='total':
+            if len(sample) >= size:
+                sample = sample[:size]  # in case we sampled too many in self-loops
+                break
+        else: #i.e., size_type=='unique'
+            sample_unique.add(w)
+            if len(sample_unique) >= size:
+                break
+    return SG
+
+原始网络的平均聚类系数:  0.5653
+RW 子网的平均聚类系数:  0.5418
+MHRW 子网的平均聚类系数:  0.5417
+
+
+计算原始网络的度分布
+f = FaceData()
+    G = f.create_graph() # 获取原始数据
+
+    _degree = nx.degree_histogram(G)          #返回图中所有节点的度分布序列
+    x_ori = range(len(_degree))                   #生成x轴序列，从1到最大度
+    num = float(sum(_degree))
+    y_ori = [float(z/num) for z in _degree]
+
+    f = open("../compare/degree_plot/Twitter_Ori.txt", "w")
+    try:
+        for i in x_ori:
+            f.write(str(i) + " " + str(float(y_ori[i])) + "\n")
+    finally:
+        f.close()

@@ -1,0 +1,47 @@
+plot画图时可以设定线条参数。包括：颜色、线型、标记风格。
+1）控制颜色
+颜色之间的对应关系为
+b---blue   c---cyan  g---green    k----black
+m---magenta r---red  w---white    y----yellow
+有三种表示颜色的方式:
+a:用全名  b:16进制如：#FF00FF  c：RGB或RGBA元组（1,0,1,1） d：灰度强度如：‘0.7’
+2)控制线型
+符号和线型之间的对应关系
+-      实线
+--     短线
+-.     短点相间线
+：     虚点线
+
+3）控制标记风格
+标记风格有多种：
+.  Point marker
+,  Pixel marker
+o  Circle marker
+v  Triangle down marker
+^  Triangle up marker
+<  Triangle left marker
+>  Triangle right marker
+1  Tripod down marker
+2  Tripod up marker
+3  Tripod left marker
+4  Tripod right marker
+s  Square marker
+p  Pentagon marker
+*  Star marker
+h  Hexagon marker
+H  Rotated hexagon D Diamond marker
+d  Thin diamond marker
+| Vertical line (vlinesymbol) marker
+_  Horizontal line (hline symbol) marker
++  Plus marker
+x  Cross (x) marker
+
+
+# import matplotlib.pyplot as plt
+# plt.plot([1,2,3],"b--" ,label="test1",linewidth=2.0)
+# plt.plot([2,3,4], "k" , label="text2")
+# plt.legend(loc = 'upper left')
+# plt.show()
+
+# 写数学表达式----见matplotlib P48页
+3.4.4 Writing mathematical expressions
